@@ -10,7 +10,7 @@ export default function NavBar() {
     }
 
     return (
-        <div className="w-full border-t-2 border-zinc-200 bg-white fixed bottom-0 p-2">
+        <div className="w-full border-t-2 border-zinc-200 bg-white p-2">
             <nav className="flex justify-between w-full p-2">
                 <a className="flex items-center justify-center flex-col relative" href="/inicio">
                     <House className={` ${verifyPathName('inicio') ? 'text-blue-600' : null}`} />
