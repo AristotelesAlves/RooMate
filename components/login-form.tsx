@@ -58,7 +58,7 @@ export function LoginForm({
                   Entrar com Google
                 </Button>
                 <FieldDescription className="text-center">
-                  Ainda não tem uma conta? <a href="#">Cadastre-se</a>
+                  Ainda não tem uma conta? <a href="/cadastro">Cadastre-se</a>
                 </FieldDescription>
               </Field>
             </FieldGroup>
