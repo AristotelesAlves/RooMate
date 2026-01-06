@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer"
+import { Card, CardDescription, CardTitle } from "@/components/ui/card"
+import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from "@/components/ui/drawer"
 import { Input } from "@/components/ui/input"
-import { Construction, Droplet, Ellipsis, Flame, House, Plus, Receipt, Wifi, Zap } from "lucide-react"
+import { Droplet, Ellipsis, Flame, House, Plus, Receipt, Wifi, Zap } from "lucide-react"
 
 export default function Ajuste() {
   return (
