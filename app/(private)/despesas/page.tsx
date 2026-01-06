@@ -88,7 +88,7 @@ export default function Ajuste() {
               </Card>
             </div>
           </div>
-          <div className="w-full flex  p-4 gap-2">
+          <div className="w-full flex p-2 gap-2">
             <DrawerClose className="flex-1">
               <Button className="w-full" variant="outline">
                 Cancel
