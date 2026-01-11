@@ -1,10 +1,16 @@
+'use client'
+import ExpenseFormDrawer from "@/components/drawer-form/expense-form"
 import { Button } from "@/components/ui/button"
 import { Card, CardDescription, CardTitle } from "@/components/ui/card"
 import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from "@/components/ui/drawer"
 import { Input } from "@/components/ui/input"
 import { Droplet, Ellipsis, Flame, House, Plus, Receipt, Wifi, Zap } from "lucide-react"
+import { useState } from "react"
 
 export default function Ajuste() {
+
+  const [contas, setContas] = useState();
+  
   return (
     <Drawer>
       <div className="flex flex-col flex-1 w-full gap-4">
@@ -48,58 +54,7 @@ export default function Ajuste() {
             </DrawerTrigger>
           </div>
         </section>
-        <DrawerContent>
-          <div className="h-dvh p-4 overflow-auto gap-4 flex flex-col">
-            <div>
-              <label>Titulo</label>
-              <Input placeholder="Ex: Conta de luz dezembro" />
-            </div>
-            <div>
-              <label>Valor</label>
-              <Input type="number" placeholder="R$ 0,00" />
-            </div>
-            <div className="grid grid-cols-3 gap-3">
-              <Card className="items-center justify-center p-2 gap-2"><Zap /><span className="text-sm">Luz</span></Card>
-              <Card className="items-center justify-center p-2 gap-2"><Droplet /><span className="text-sm">Água</span></Card>
-              <Card className="items-center justify-center p-2 gap-2"><Wifi /><span className="text-sm">Internet</span></Card>
-              <Card className="items-center justify-center p-2 gap-2"><House /><span className="text-sm">Aluguel</span></Card>
-              <Card className="items-center justify-center p-2 gap-2"><Flame /><span className="text-sm">Gás</span></Card>
-              <Card className="items-center justify-center p-2 gap-2"><Ellipsis /><span className="text-sm">Outros</span></Card>
-            </div>
-            <div>
-              <label>Data de vencimento</label>
-              <Input type="date" />
-            </div>
-            <div className="flex flex-col gap-3">
-              <label>Como dividir?</label>
-              <Card className="flex-row p-3 gap-3">
-                <Input className="p-0 m-0 w-2" type="radio" />
-                <div>
-                  <CardTitle>Dividir igualmente</CardTitle>
-                  <CardDescription>Cada morador paga sua parte</CardDescription>
-                </div>
-              </Card>
-              <Card className="flex-row p-3 gap-3">
-                <Input className="p-0 m-0 w-2" type="radio" />
-                <div>
-                  <CardTitle>Uma pessoa paga</CardTitle>
-                  <CardDescription>Conta de responsabilidade individual</CardDescription>
-                </div>
-              </Card>
-            </div>
-          </div>
-          <div className="w-full flex p-2 gap-2">
-            <DrawerClose className="flex-1">
-              <Button className="w-full" variant="outline">
-                Cancel
-              </Button>
-            </DrawerClose>
-
-            <Button className="flex-1">
-              Salvar
-            </Button>
-          </div>
-        </DrawerContent>
+        <ExpenseFormDrawer/>
       </div>
     </Drawer>
   )
