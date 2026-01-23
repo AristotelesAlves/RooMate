@@ -32,6 +32,45 @@ export default function ExpenseFormDrawer() {
         }));
     }
 
+    const categorysMapper = [
+        {
+            id: 1,
+            name: 'Luz',
+            label: 'luz',
+            icon: <Zap />
+        },
+        {
+            id: 2,
+            name: 'Água',
+            label: 'agua',
+            icon: <Droplet />
+        },
+        {
+            id: 3,
+            name: 'Internet',
+            label: 'internet',
+            icon: <Wifi />
+        },
+        {
+            id: 4,
+            name: 'Aluguel',
+            label: 'aluguel',
+            icon: <House />
+        },
+        {
+            id: 5,
+            name: 'Gás',
+            label: 'gas',
+            icon: <Flame />
+        },
+        {
+            id: 6,
+            name: 'Outros',
+            label: 'outros',
+            icon: <Ellipsis />
+        },
+    ]
+
     return (
         <DrawerContent>
             <div className="h-dvh p-4 overflow-auto gap-4 flex flex-col">
@@ -44,57 +83,15 @@ export default function ExpenseFormDrawer() {
                     <Input type="number" placeholder="R$ 0,00" />
                 </div>
                 <div className="grid grid-cols-3 gap-3">
-                    <Card className="items-center justify-center p-2 gap-2"
-                        onClick={() => updateFormDate("category", "luz")}>
-                        <Zap />
-                        <span className="text-sm">
-                            Luz
-                        </span>
-                    </Card>
-                    <Card 
-                      className="items-center justify-center p-2 gap-2"
-                      onClick={() => updateFormDate("category", "agua")}
-                    >
-                        <Droplet/>
-                        <span className="text-sm">
-                            Água
-                        </span>
-                    </Card>
-                    <Card 
-                      className="items-center justify-center p-2 gap-2"
-                      onClick={() => updateFormDate("category", "internet")}>
-                        <Wifi />
-                        <span className="text-sm">
-                            Internet
-                        </span>
-                    </Card>
-                    <Card 
-                      className="items-center justify-center p-2 gap-2"
-                      onClick={() => updateFormDate("category", "aluguel")}
-                    >
-                        <House />
-                        <span className="text-sm">
-                            Aluguel
-                        </span>
-                    </Card>
-                    <Card 
-                      className="items-center justify-center p-2 gap-2"
-                      onClick={() => updateFormDate("category", "gas")}
-                    >
-                        <Flame />
-                        <span className="text-sm">
-                            Gás
-                        </span>
-                    </Card>
-                    <Card 
-                      className="items-center justify-center p-2 gap-2"
-                      onClick={() => updateFormDate("category", "outros")}
-                    >
-                        <Ellipsis />
-                        <span className="text-sm">
-                            Outros
-                        </span>
-                    </Card>
+                    {categorysMapper.map((category, key) => (
+                        <Card className={`items-center justify-center p-2 gap-2 ${formDate.category === category.label ? "border-sky-500 bg-sky-50" : "border-gray-300"} border-2 cursor-pointer transition-all duration-300`}
+                            onClick={() => updateFormDate("category", category.label as expenseType["category"])}>
+                            {category.icon}
+                            <span className="text-sm">
+                                {category.name}
+                            </span>
+                        </Card>
+                    ))}
                 </div>
                 <div>
                     <label>Data de vencimento</label>
