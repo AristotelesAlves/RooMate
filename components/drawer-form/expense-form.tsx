@@ -113,7 +113,7 @@ export default function ExpenseFormDrawer() {
                             type="radio"
                             checked={formDate.division === true}
                             readOnly
-                            className={`w-4 h-4 accent-sky-500`}
+                            className="w-4 h-4"
                         />
                         <div>
                             <CardTitle>Dividir igualmente</CardTitle>
@@ -134,7 +134,7 @@ export default function ExpenseFormDrawer() {
                             type="radio"
                             checked={formDate.division === false}
                             readOnly
-                            className="w-4 h-4 accent-sky-500"
+                            className="w-4 h-4"
                         />
                         <div>
                             <CardTitle>Uma pessoa paga</CardTitle>
