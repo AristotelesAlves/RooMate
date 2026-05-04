@@ -6,6 +6,7 @@ import { DrawerClose, DrawerContent } from "../ui/drawer";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useState } from "react";
+import { toast } from "sonner"
 
 
 type expenseType = {
@@ -70,17 +71,58 @@ export default function ExpenseFormDrawer() {
             icon: <Ellipsis />
         },
     ]
+    
+    function emptyFields() {
+        const requiredFields: (keyof expenseType)[] = ['title', 'value', 'category', 'dueDate'];
+        const emptyFields = requiredFields.filter(filed => !formDate[filed]);
+        return emptyFields;
+    }
+
+    function mapperError(field: keyof expenseType) {
+        switch (field) {
+            case 'title':
+                return "O título é obrigatório.";
+            case 'value':
+                return "O valor é obrigatório.";
+            case 'category':
+                return "A categoria é obrigatória.";
+            case 'dueDate':
+                return "A data de vencimento é obrigatória.";
+            default:
+                return "";
+        }
+    }
+
+    function handleSubmit() {
+        const verifyEmptyFields: (keyof expenseType)[] = emptyFields();
+        if(verifyEmptyFields.length > 0) {
+            verifyEmptyFields.forEach(fild => {
+                const errorMessage = mapperError(fild);
+                toast.error(errorMessage, {
+                    position: 'top-center',
+                    closeButton: true,
+                    icon: '⚠️',
+                    style: {
+                        background: '#ef4444',
+                        color: '#ffff',
+                        border: '1px solid #ef4444',
+                    }
+                });
+            });
+        }
+        console.log(formDate);
+    }
 
     return (
         <DrawerContent>
             <div className="h-dvh p-4 overflow-auto gap-4 flex flex-col">
                 <div>
                     <label>Titulo</label>
-                    <Input placeholder="Ex: Conta de luz dezembro" />
+                    <Input onChange={(e) => updateFormDate("title", e.target.value)} placeholder="Ex: Conta de luz dezembro" />
                 </div>
                 <div>
                     <label>Valor</label>
-                    <Input type="number" placeholder="R$ 0,00" />
+                    <Input type="number" onChange={(e) => updateFormDate("value", parseFloat(e.target.value))} placeholder="R$ 0,00" />
                 </div>
                 <div className="grid grid-cols-3 gap-3">
                     {categorysMapper.map((category, key) => (
@@ -120,7 +162,6 @@ export default function ExpenseFormDrawer() {
                             <CardDescription>Cada morador paga sua parte</CardDescription>
                         </div>
                     </Card>
-
                     <Card
                         className={`flex-row p-3 gap-3 items-center cursor-pointer border transition
                             ${formDate.division === false
@@ -142,7 +183,6 @@ export default function ExpenseFormDrawer() {
                         </div>
                     </Card>
                 </div>
-
             </div>
             <div className="w-full flex p-2 gap-2">
                 <DrawerClose className="flex-1">
@@ -150,8 +190,7 @@ export default function ExpenseFormDrawer() {
                         Cancel
                     </Button>
                 </DrawerClose>
-
-                <Button className="flex-1">
+                <Button onClick={handleSubmit} className="flex-1">
                     Salvar
                 </Button>
             </div>
