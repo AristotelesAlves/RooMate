@@ -1,8 +1,9 @@
-'use client'
+"use client"
 
-import { Droplet, Ellipsis, Flame, House, Wifi, Zap } from "lucide-react";
+import { formatMoneyInput, parseMoneyInput } from "@/lib/money-mask";
+import { Droplet, Ellipsis, Flame, House, ShoppingCart, Wifi, Zap } from "lucide-react";
 import { Card, CardDescription, CardTitle } from "../ui/card";
-import { DrawerClose, DrawerContent } from "../ui/drawer";
+import { DrawerClose, DrawerContent, DrawerDescription, DrawerTitle } from "../ui/drawer";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useState } from "react";
@@ -12,16 +13,46 @@ import { toast } from "sonner"
 type expenseType = {
     title: string,
     value: number,
-    category: 'luz' | 'agua' | 'internet' | 'aluguel' | 'gas' | 'outros',
+    category: 'luz' | 'agua' | 'internet' | 'aluguel' | 'gas' | 'mercado' | 'outros',
+    purchaseListId: string,
     dueDate: Date,
     division: boolean
 }
 
-export default function ExpenseFormDrawer() {
+export type CreateExpenseInput = {
+    title: string,
+    amount: number,
+    category: expenseType["category"],
+    dueDate: string,
+    division: boolean,
+    purchaseListId?: string
+}
+
+type ExpenseFormDrawerProps = {
+    onAddExpense: (expense: CreateExpenseInput) => void
+}
+
+export default function ExpenseFormDrawer({ onAddExpense }: ExpenseFormDrawerProps) {
 
     const [formDate, setFormDate] = useState<Partial<expenseType>>({
         division: true
     });
+    const [moneyValue, setMoneyValue] = useState("");
+
+    const openPurchaseLists = [
+        {
+            id: "compras-semana",
+            name: "Compras da semana"
+        },
+        {
+            id: "hortifruti",
+            name: "Hortifruti"
+        },
+        {
+            id: "limpeza",
+            name: "Produtos de limpeza"
+        },
+    ];
 
     function updateFormDate<K extends keyof expenseType>(
         key: K,
@@ -66,6 +97,12 @@ export default function ExpenseFormDrawer() {
         },
         {
             id: 6,
+            name: 'Mercado',
+            label: 'mercado',
+            icon: <ShoppingCart />
+        },
+        {
+            id: 7,
             name: 'Outros',
             label: 'outros',
             icon: <Ellipsis />
@@ -75,6 +112,11 @@ export default function ExpenseFormDrawer() {
     function emptyFields() {
         const requiredFields: (keyof expenseType)[] = ['title', 'value', 'category', 'dueDate'];
         const emptyFields = requiredFields.filter(filed => !formDate[filed]);
+
+        if (formDate.category === "mercado" && !formDate.purchaseListId) {
+            emptyFields.push("purchaseListId");
+        }
+
         return emptyFields;
     }
 
@@ -88,9 +130,26 @@ export default function ExpenseFormDrawer() {
                 return "A categoria é obrigatória.";
             case 'dueDate':
                 return "A data de vencimento é obrigatória.";
+            case 'purchaseListId':
+                return "A lista de compras é obrigatória.";
             default:
                 return "";
         }
+    }
+
+    function handleMoneyChange(value: string) {
+        const formattedValue = formatMoneyInput(value);
+
+        setMoneyValue(formattedValue);
+        updateFormDate("value", parseMoneyInput(formattedValue));
+    }
+
+    function handleCategoryChange(category: expenseType["category"]) {
+        setFormDate(prev => ({
+            ...prev,
+            category,
+            purchaseListId: category === "mercado" ? prev.purchaseListId : undefined
+        }));
     }
 
     function handleSubmit() {
@@ -109,12 +168,25 @@ export default function ExpenseFormDrawer() {
                     }
                 });
             });
+            return;
         }
-        console.log(formDate);
+
+        onAddExpense({
+            title: formDate.title as string,
+            amount: formDate.value as number,
+            category: formDate.category as expenseType["category"],
+            dueDate: (formDate.dueDate as Date).toISOString().split("T")[0],
+            division: formDate.division ?? true,
+            purchaseListId: formDate.purchaseListId,
+        });
     }
 
     return (
         <DrawerContent>
+            <DrawerTitle className="sr-only">Adicionar despesa</DrawerTitle>
+            <DrawerDescription className="sr-only">
+                Preencha os dados para cadastrar uma nova despesa.
+            </DrawerDescription>
             <div className="h-dvh p-4 overflow-auto gap-4 flex flex-col">
                 <div>
                     <label>Titulo</label>
@@ -122,12 +194,18 @@ export default function ExpenseFormDrawer() {
                 </div>
                 <div>
                     <label>Valor</label>
-                    <Input type="number" onChange={(e) => updateFormDate("value", parseFloat(e.target.value))} placeholder="R$ 0,00" />
+                    <Input
+                        inputMode="numeric"
+                        onChange={(e) => handleMoneyChange(e.target.value)}
+                        placeholder="R$ 0,00"
+                        value={moneyValue}
+                    />
                 </div>
                 <div className="grid grid-cols-3 gap-3">
-                    {categorysMapper.map((category, key) => (
+                    {categorysMapper.map((category) => (
                         <Card className={`items-center justify-center p-2 gap-2 ${formDate.category === category.label ? "border-sky-500 bg-sky-50" : "border-gray-300"} border-2 cursor-pointer transition-all duration-300`}
-                            onClick={() => updateFormDate("category", category.label as expenseType["category"])}>
+                            key={category.id}
+                            onClick={() => handleCategoryChange(category.label as expenseType["category"])}>
                             {category.icon}
                             <span className="text-sm">
                                 {category.name}
@@ -135,9 +213,28 @@ export default function ExpenseFormDrawer() {
                         </Card>
                     ))}
                 </div>
+                {formDate.category === "mercado" ? (
+                    <div>
+                        <label>Lista de compras</label>
+                        <select
+                            className="border-input h-9 w-full rounded-md border bg-transparent px-3 py-1 text-base shadow-xs outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] md:text-sm"
+                            onChange={(e) => updateFormDate("purchaseListId", e.target.value)}
+                            value={formDate.purchaseListId ?? ""}
+                        >
+                            <option value="" disabled>
+                                Selecione uma lista de compras em aberto
+                            </option>
+                            {openPurchaseLists.map((list) => (
+                                <option key={list.id} value={list.id}>
+                                    {list.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                ) : null}
                 <div>
                     <label>Data de vencimento</label>
-                    <Input type="date" />
+                    <Input type="date" onChange={(e) => updateFormDate("dueDate", new Date(e.target.value))} />
                 </div>
                 <div className="flex flex-col gap-3">
                     <label>Como dividir?</label>

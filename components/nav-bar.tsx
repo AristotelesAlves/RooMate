@@ -5,17 +5,17 @@ import { usePathname } from "next/navigation"
 export default function NavBar() {
     const pathname = usePathname();
 
-    const verifyPathName = (pathName: string): boolean  => {
+    const verifyPathName = (pathName: string): boolean => {
         return pathname.includes(pathName)
     }
 
     return (
-        <div className="w-full fixed flex justify-center bottom-0 left-0 p-2">
+        <div className="fixed bottom-0 left-0 w-full flex justify-center p-2 bg-linear-to-t from-black/30 via-black/10 to-transparent">
             <nav className="flex gap-8 bg-white border-zinc-200 border-2 w-fit rounded-2xl px-4 py-2">
                 <a className="flex items-center justify-center flex-col relative" href="/inicio">
                     <House className={` ${verifyPathName('inicio') ? 'text-[#237B99]' : null}`} />
                     <span className={`text-xs ${verifyPathName('inicio') ? 'text-[#237B99]' : null}`}>
-                        Início 
+                        Início
                     </span>
                 </a>
                 <a className="flex items-center justify-center flex-col relative" href="/despesas">
