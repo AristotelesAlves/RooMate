@@ -22,11 +22,11 @@ export default function RootLayout({
 }>) {
   return (
       <div
-        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col w-full min-h-screen`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col w-full min-h-screen pb-16 bg-[#F9F7F5]`}
       >
         <Toaster />
-        <Header/>
-        <div className="flex-1 p-2 h-full w-full overflow-y-scroll bg-[#F9F7F5]">
+        {/* <Header/> */}
+        <div className="flex-1 p-2 h-full w-full overflow-y-scroll">
           {children}
         </div>
         <NavBar/>
